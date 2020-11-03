@@ -17,12 +17,9 @@ def list_circles(request):
     """List circles."""
 
     circles = Circle.objects.filter(is_public=True)
-    data = []
-    for circle in circles:
-        serializer = CircleSerializer(circle)
-        data.append(serializer.data)
+    serializer = CircleSerializer(circles, many=True)
 
-    return Response(data)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def create_circles(request):
