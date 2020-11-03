@@ -3,6 +3,9 @@
 # Django REST Framework
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+# Serializers
+from cride.circles.serializers import CircleSerializer
 # Django
 from django.http import JsonResponse, HttpResponse
 
@@ -16,12 +19,8 @@ def list_circles(request):
     circles = Circle.objects.filter(is_public=True)
     data = []
     for circle in circles:
-        data.append({
-            'name': circle.name,
-            'slug_name': circle.slug_name,
-            'rides_take': circle.rides_offered,
-            'members_limit': circle.members_limit
-        })
+        serializer = CircleSerializer(circle)
+        data.append(serializer.data)
 
     return Response(data)
 
