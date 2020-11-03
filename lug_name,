@@ -1,0 +1,29 @@
+[33mcommit 4e3f0111ed1c0acac375b3b5240f08ce1c6c6aed[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: cris-linux <cadasmeq02@gmail.com>
+Date:   Tue Nov 3 12:33:51 2020 -0300
+
+    clase 4 : Creado circles app, creado circle model, se registra circles model en admin
+
+[33mcommit 1ec1722135cfa28c8ba0c1a7696bbb863917f481[m
+Author: cris-linux <cadasmeq02@gmail.com>
+Date:   Tue Nov 3 11:36:41 2020 -0300
+
+    clase 3 : Creado profile model y son agregados y registrados tanto user model como profile model en admin
+
+[33mcommit 3c0745d2594b6066b83ce80c4e702c0305a03a06[m
+Author: cris-linux <cadasmeq02@gmail.com>
+Date:   Mon Nov 2 19:20:01 2020 -0300
+
+    clase 2 : Creado modelo de usuario heredando del modelo Base del proyecto y del modelo abstracto; ademas se agrega autentificacion en configuraciones sobre el modelo base a utilizar dejando como email como USERNAME_FIELD
+
+[33mcommit 69dddc489bffd2385296955a2a82ea7e55900b56[m
+Author: cris-linux <cadasmeq02@gmail.com>
+Date:   Sat Oct 31 21:17:20 2020 -0300
+
+    clase 1: Modelo base abstracto
+
+[33mcommit 814c0ee9a3e62cb8215c2164795cd2512332fee4[m
+Author: cris-linux <cadasmeq02@gmail.com>
+Date:   Sat Oct 31 16:50:58 2020 -0300
+
+    starting project
