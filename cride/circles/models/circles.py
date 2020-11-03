@@ -21,9 +21,6 @@ class Circle(CRideModel):
         upload_to='circles/pictures',
         blank=True,
         null=True,
-        height_field=None,
-        width_field=None, 
-        max_length=None
     )
 
     # Stats

@@ -277,3 +277,7 @@ cride/media/
 .env
 .envs/*
 !.envs/.local/
+
+
+### Others
+*.csv
