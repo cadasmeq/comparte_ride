@@ -12,7 +12,6 @@ from cride.users.serializers import (
     UserSignupSerializer,
 )
 
-
 class UserLoginAPIView(APIView):
     """User login API view."""
 
