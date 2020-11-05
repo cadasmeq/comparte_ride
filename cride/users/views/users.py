@@ -5,6 +5,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+# serializers 
+from cride.users.serializers import (
+    UserLoginSerializer,
+    UserModelSerializer,
+)
+
 
 class UserLoginAPIView(APIView):
     """User login API view."""
