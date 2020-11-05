@@ -1,19 +1,26 @@
-# django
+"""User model."""
+
+# Django
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 
-# utils
+# Utilities
 from cride.utils.models import CRideModel
 
+
 class User(CRideModel, AbstractUser):
-    """User Model."""
+    """User model.
+
+    Extend from Django's Abstract User, change the username field
+    to email and add some extra fields.
+    """
 
     email = models.EmailField(
-        'email_address',
+        'email address',
         unique=True,
         error_messages={
-            'unique':'A user with that email already exists.'
+            'unique': 'A user with that email already exists.'
         }
     )
 
@@ -27,10 +34,10 @@ class User(CRideModel, AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     is_client = models.BooleanField(
-        'client_status',
+        'client',
         default=True,
         help_text=(
-            'help easily distinguish users and perform queries.'
+            'Help easily distinguish users and perform queries. '
             'Clients are the main type of user.'
         )
     )
@@ -38,13 +45,13 @@ class User(CRideModel, AbstractUser):
     is_verified = models.BooleanField(
         'verified',
         default=True,
-        help_text='Set to True when the user have verified its email address.'
+        help_text='Set to true when the user have verified its email address.'
     )
 
     def __str__(self):
-        '''Return Username'''
+        """Return username."""
         return self.username
-    
+
     def get_short_name(self):
-        '''Return Username'''
+        """Return username."""
         return self.username

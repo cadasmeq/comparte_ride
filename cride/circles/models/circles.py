@@ -1,29 +1,27 @@
-"""Circles Model"""
+"""Circle model."""
 
-# django
+# Django
 from django.db import models
 
 # Utilities
 from cride.utils.models import CRideModel
 
+
 class Circle(CRideModel):
-    """Circle Model
-    
+    """Circle model.
+
     A circle is a private group where rides are offered and taken
-    by its members. TO join a circle a user must receive an unique
+    by its members. To join a circle a user must receive an unique
     invitation code from an existing circle member.
     """
+
     name = models.CharField('circle name', max_length=140)
     slug_name = models.SlugField(unique=True, max_length=40)
 
-    about = models.CharField("circle description", max_length=50)
-    picture = models.ImageField(
-        upload_to='circles/pictures',
-        blank=True,
-        null=True,
-    )
+    about = models.CharField('circle description', max_length=255)
+    picture = models.ImageField(upload_to='circles/pictures', blank=True, null=True)
 
-    # Stats
+    # Stats
     rides_offered = models.PositiveIntegerField(default=0)
     rides_taken = models.PositiveIntegerField(default=0)
 
@@ -49,10 +47,10 @@ class Circle(CRideModel):
     )
 
     def __str__(self):
-        '''Return circles name'''
+        """Return circle name."""
         return self.name
-    
+
     class Meta(CRideModel.Meta):
-        """Meta Class"""
+        """Meta class."""
 
         ordering = ['-rides_taken', '-rides_offered']

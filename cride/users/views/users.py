@@ -5,12 +5,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# serializers 
+# Serializers
 from cride.users.serializers import (
     UserLoginSerializer,
     UserModelSerializer,
-    UserSignupSerializer,
+    UserSignUpSerializer
 )
+
 
 class UserLoginAPIView(APIView):
     """User login API view."""
@@ -26,14 +27,14 @@ class UserLoginAPIView(APIView):
         }
         return Response(data, status=status.HTTP_201_CREATED)
 
-class UserSignupAPIView(APIView):
-    """User Signup API view."""
+
+class UserSignUpAPIView(APIView):
+    """User sign up API view."""
 
     def post(self, request, *args, **kwargs):
         """Handle HTTP POST request."""
-        serializer = UserSignupSerializer(data=request.data)
+        serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        data = UserModelSerializer(user).data,
-
+        data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_201_CREATED)

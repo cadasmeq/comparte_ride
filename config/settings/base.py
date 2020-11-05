@@ -45,17 +45,17 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 ]
 LOCAL_APPS = [
     'cride.users.apps.UsersAppConfig',
-    'cride.circles.apps.CircleAppConfig',
+    'cride.circles.apps.CirclesAppConfig',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # Passwords
 PASSWORD_HASHERS = [
-    #'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',

@@ -278,6 +278,4 @@ cride/media/
 .envs/*
 !.envs/.local/
 
-
-### Others
-*.csv
+circles.csv
