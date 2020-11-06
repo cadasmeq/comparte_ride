@@ -1,8 +1,9 @@
-"""Circles views."""
+"""Circles Views"""
 
 # Django REST Framework
-from rest_framework.decorators import api_view
+from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 # Models
 from cride.circles.models import Circle
@@ -13,6 +14,14 @@ from cride.circles.serializers import (
     CreateCircleSerializer
 )
 
+class CirclesViewSet(viewsets.ViewSet):
+    """Circles ViewSet"""
+
+    def list(self, request):
+        queryset = Circle.objects.all()
+        serializer = CircleSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
 
 @api_view(['GET'])
 def list_circles(request):
