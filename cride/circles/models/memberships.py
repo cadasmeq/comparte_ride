@@ -14,7 +14,7 @@ class Membership(CRideModel):
     """
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     profile = models.ForeignKey('users.Profile', on_delete=models.CASCADE)
-    circles = models.ForeignKey('circles.Circle', on_delete=models.CASCADE)
+    circle = models.ForeignKey('circles.Circle', on_delete=models.CASCADE)
 
     is_admin = models.BooleanField(
         'circle_admin',
@@ -47,5 +47,5 @@ class Membership(CRideModel):
         """Return username and circle."""
         return "@{} at #{}".format(
             self.user.username,
-            self.circles.slug_name
+            self.circle.slug_name
         )
