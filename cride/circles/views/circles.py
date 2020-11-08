@@ -23,6 +23,7 @@ class CircleViewSet(mixins.CreateModelMixin,
 
     queryset = Circle.objects.all()
     serializer_class = CircleModelSerializer
+    lookup_field = 'slug_name'
 
     permission_classes = (IsAuthenticated, )
 
@@ -33,13 +34,12 @@ class CircleViewSet(mixins.CreateModelMixin,
             return queryset.filter(is_public=True)
         return queryset
 
-    def get_permissions(self):
+    def get_permissions (self):
         """Assign permission based on actions."""
         permissions = [IsAuthenticated]
         if self.action in ['update', 'partial_update']:
             permissions.append(IsCircleAdmin)
         return [permission() for permission in permissions]
-
 
     def perform_create(self, serializer):
         """Assign circle admin."""
