@@ -33,7 +33,7 @@ class CircleViewSet(viewsets.ModelViewSet):
         Membership.objects.create(
             user=user,
             profile=profile,
-            circles=circle,
+            circle=circle,
             is_admin=True,
             remaining_invitations=10,
         )
