@@ -10,29 +10,27 @@ from cride.circles.models import Membership
 from cride.users.serializers import UserModelSerializer
 
 class MembershipModelSerializer(serializers.ModelSerializer):
-    """MemberModelSerializer."""
+    """Member model serializer."""
 
     user = UserModelSerializer(read_only=True)
     invited_by = serializers.StringRelatedField()
     joined_at = serializers.DateTimeField(source='created', read_only=True)
 
     class Meta:
-        """Meta Class."""
+        """Meta class."""
 
         model = Membership
         fields = (
-            'users',
+            'user',
             'is_admin', 'is_active',
             'used_invitations', 'remaining_invitations',
             'invited_by',
-            'rides_taken', 'rides_offered'
+            'rides_taken', 'rides_offered',
             'joined_at'
         )
-        read_ony_fields = (
+        read_only_fields = (
             'user',
             'used_invitations',
             'invited_by',
-            'rides_taken', 'rides_offered'
+            'rides_taken', 'rides_offered',
         )
-
-
