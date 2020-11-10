@@ -1,4 +1,4 @@
-"""Circle Invitation Managers."""
+"""Circle invitation managers."""
 
 # Django
 from django.db import models
@@ -7,9 +7,9 @@ from django.db import models
 import random
 from string import ascii_uppercase, digits
 
+
 class InvitationManager(models.Manager):
     """Invitation manager.
-
     Used to handle code creation.
     """
 
