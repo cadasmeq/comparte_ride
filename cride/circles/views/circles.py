@@ -2,10 +2,14 @@
 
 # Django REST Framework
 from rest_framework import mixins, viewsets
-from rest_framework.permissions import IsAuthenticated
 
 # Permissions
-from cride.circles.permissions import IsCircleAdmin
+from rest_framework.permissions import IsAuthenticated
+from cride.circles.permissions.circles import IsCircleAdmin
+
+# Filters
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Serializers
 from cride.circles.serializers import CircleModelSerializer
@@ -21,11 +25,15 @@ class CircleViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     """Circle view set."""
 
-    queryset = Circle.objects.all()
     serializer_class = CircleModelSerializer
     lookup_field = 'slug_name'
 
-    permission_classes = (IsAuthenticated, )
+    # Filters
+    filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
+    search_fields = ('slug_name', 'name')
+    ordering_fields = ('rides_offered', 'rides_taken', 'name', 'created', 'member_limit')
+    ordering = ('-members__count', '-rides_offered', '-rides_taken')
+    filter_fields = ('verified', 'is_limited')
 
     def get_queryset(self):
         """Restrict list to public-only."""
@@ -34,8 +42,8 @@ class CircleViewSet(mixins.CreateModelMixin,
             return queryset.filter(is_public=True)
         return queryset
 
-    def get_permissions (self):
-        """Assign permission based on actions."""
+    def get_permissions(self):
+        """Assign permissions based on action."""
         permissions = [IsAuthenticated]
         if self.action in ['update', 'partial_update']:
             permissions.append(IsCircleAdmin)
@@ -51,5 +59,5 @@ class CircleViewSet(mixins.CreateModelMixin,
             profile=profile,
             circle=circle,
             is_admin=True,
-            remaining_invitations=10,
+            remaining_invitations=10
         )
