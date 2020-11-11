@@ -10,6 +10,7 @@ from string import ascii_uppercase, digits
 
 class InvitationManager(models.Manager):
     """Invitation manager.
+
     Used to handle code creation.
     """
 

@@ -1,7 +1,7 @@
 """Circle membership views."""
 
 # Django REST Framework
-from rest_framework import mixins, viewsets, status
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -18,6 +18,7 @@ from cride.circles.serializers import MembershipModelSerializer, AddMemberSerial
 
 
 class MembershipViewSet(mixins.ListModelMixin,
+                        mixins.CreateModelMixin,
                         mixins.RetrieveModelMixin,
                         mixins.DestroyModelMixin,
                         viewsets.GenericViewSet):
@@ -64,6 +65,7 @@ class MembershipViewSet(mixins.ListModelMixin,
     @action(detail=True, methods=['get'])
     def invitations(self, request, *args, **kwargs):
         """Retrieve a member's invitations breakdown.
+
         Will return a list containing all the members that have
         used its invitations and another list containing the
         invitations that haven't being used yet.
@@ -80,32 +82,31 @@ class MembershipViewSet(mixins.ListModelMixin,
             issued_by=request.user,
             used=False
         ).values_list('code')
-
         diff = member.remaining_invitations - len(unused_invitations)
 
         invitations = [x[0] for x in unused_invitations]
-        
         for i in range(0, diff):
             invitations.append(
-                Invitation.objects.create(issued_by=request.user, circle=self.circle).code
+                Invitation.objects.create(
+                    issued_by=request.user,
+                    circle=self.circle
+                ).code
             )
 
         data = {
             'used_invitations': MembershipModelSerializer(invited_members, many=True).data,
             'invitations': invitations
         }
-
         return Response(data)
-    
+
     def create(self, request, *args, **kwargs):
         """Handle member creation from invitation code."""
         serializer = AddMemberSerializer(
             data=request.data,
-            context={'circle':self.circle, 'request':request}
+            context={'circle': self.circle, 'request': request}
         )
         serializer.is_valid(raise_exception=True)
         member = serializer.save()
 
         data = self.get_serializer(member).data
         return Response(data, status=status.HTTP_201_CREATED)
-

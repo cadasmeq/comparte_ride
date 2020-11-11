@@ -16,12 +16,12 @@ from rest_framework.validators import UniqueValidator
 # Models
 from cride.users.models import User, Profile
 
+# Serializers
+from cride.users.serializers.profiles import ProfileModelSerializer
+
 # Utilities
 import jwt
 from datetime import timedelta
-
-# Serializers
-from cride.users.serializers.profiles import ProfileModelSerializer
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -42,31 +42,6 @@ class UserModelSerializer(serializers.ModelSerializer):
             'profile'
         )
 
-class AccountVerificationSerializer(serializers.Serializer):
-    """Account Verification Serializer."""
-    token = serializers.CharField()
-
-    def validate_token(self, data):
-        """Verify token is valid."""
-        try:
-            payload = jwt.decode(data, settings.SECRET_KEY, algorithms=['HS256'])  
-        except jwt.ExpiredSignatureError:
-            raise serializers.ValidationError('Verification link has expired.')
-        except jwt.PyJWTError:
-            raise serializers.ValidationError('Invalid Token.')
-        if payload['type'] != 'email_confirmation':
-            raise serializers.ValidationError('Invalid Token.')
-    
-        self.context['payload'] = payload
-        return data
-
-
-    def save(self):
-        """Update user's verify status"""
-        payload = self.context['payload']
-        user = User.objects.get(username=payload['user'])
-        user.is_verified = True
-        user.save()
 
 class UserSignUpSerializer(serializers.Serializer):
     """User sign up serializer.
@@ -163,3 +138,30 @@ class UserLoginSerializer(serializers.Serializer):
         """Generate or retrieve new token."""
         token, created = Token.objects.get_or_create(user=self.context['user'])
         return self.context['user'], token.key
+
+
+class AccountVerificationSerializer(serializers.Serializer):
+    """Account verification serializer."""
+
+    token = serializers.CharField()
+
+    def validate_token(self, data):
+        """Verify token is valid."""
+        try:
+            payload = jwt.decode(data, settings.SECRET_KEY, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise serializers.ValidationError('Verification link has expired.')
+        except jwt.PyJWTError:
+            raise serializers.ValidationError('Invalid token')
+        if payload['type'] != 'email_confirmation':
+            raise serializers.ValidationError('Invalid token')
+
+        self.context['payload'] = payload
+        return data
+
+    def save(self):
+        """Update user's verified status."""
+        payload = self.context['payload']
+        user = User.objects.get(username=payload['user'])
+        user.is_verified = True
+        user.save()
