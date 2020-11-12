@@ -79,3 +79,17 @@ class CreateRideSerializer(serializers.ModelSerializer):
         profile.save()
 
         return ride
+
+class RideModelSerializer(serializers.ModelSerializer):
+    """Ride Model Serializer."""
+
+    class Meta:
+        """Meta class."""
+
+        model = Ride
+        fields = '__all__'
+        read_only_fields = (
+            'offered_by',
+            'offered_in',
+            'rating'
+        )
