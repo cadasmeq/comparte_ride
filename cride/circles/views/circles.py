@@ -17,6 +17,9 @@ from cride.circles.serializers import CircleModelSerializer
 # Models
 from cride.circles.models import Circle, Membership
 
+# Utilies
+from django.db.models import Count
+
 
 class CircleViewSet(mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin,
