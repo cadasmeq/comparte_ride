@@ -32,12 +32,12 @@ class CircleViewSet(mixins.CreateModelMixin,
     filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
     search_fields = ('slug_name', 'name')
     ordering_fields = ('rides_offered', 'rides_taken', 'name', 'created', 'member_limit')
-    ordering = ('-members', '-rides_offered', '-rides_taken')
+    ordering = ('-members_count', '-rides_offered', '-rides_taken')
     filter_fields = ('verified', 'is_limited')
 
     def get_queryset(self):
         """Restrict list to public-only."""
-        queryset = Circle.objects.all()
+        queryset = Circle.objects.annotate(members_count=Count('members')).all()
         if self.action == 'list':
             return queryset.filter(is_public=True)
         return queryset
