@@ -19,7 +19,8 @@ from cride.rides.serializers import (
     CreateRideSerializer,
     RideModelSerializer,
     JoinRideSerializer,
-    EndRideSerializer
+    EndRideSerializer,
+    CreateRideRatingSerializer
 )
 
 # Models
@@ -34,7 +35,7 @@ class RideViewSet(mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.CreateModelMixin,
                   mixins.UpdateModelMixin,
-                  viewsets.GenericViewSet ):
+                  viewsets.GenericViewSet):
     """Ride view set."""
 
     filter_backends = (SearchFilter, OrderingFilter)
@@ -71,6 +72,8 @@ class RideViewSet(mixins.ListModelMixin,
             return JoinRideSerializer
         if self.action =='finish':
             return EndRideSerializer
+        if self.action == 'rate':
+            return CreateRideRatingSerializer
         return RideModelSerializer
 
     def get_queryset(self):
@@ -115,3 +118,17 @@ class RideViewSet(mixins.ListModelMixin,
         serializer.save()
         data = RideModelSerializer(ride).data
         return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def rate(self, request, *args, **kwargs):
+        """Rate ride."""
+        ride = self.get_object()
+        serializer_class = self.get_serializer_class()
+        context = self.get_serializer_context()
+        context['ride'] = ride
+        serializer = serializer_class(data=request.data, context=context)
+        serializer.is_valid(raise_exception=True)
+        ride = serializer.save()
+        data = RideModelSerializer(ride).data
+        return Response(data, status=status.HTTP_201_CREATED)
+
