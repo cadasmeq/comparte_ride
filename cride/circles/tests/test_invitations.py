@@ -3,10 +3,14 @@
 # Django
 from django.test import TestCase
 
+# Django REST Framework
+from rest_framework import status
+from rest_framework.test import APITestCase
+
 # Model
-from cride.circles.models import Invitation
-from cride.users.models import User
-from cride.circles.models import Circle
+from cride.circles.models import Circle, Invitation, Membership
+from cride.users.models import User, Profile
+from rest_framework.authtoken.models import Token
 
 class InvitationsManagerTestCase(TestCase):
     """Invitation manager test case."""
@@ -60,5 +64,63 @@ class InvitationsManagerTestCase(TestCase):
         )
         self.assertNotEqual(code, invitation.code)
 
-    
 
+class MemberInvitationsAPITestCase(APITestCase):
+    """Member invitation API test case."""
+
+    def setUp(self):
+        """Test case setup"""
+
+        self.user = User.objects.create(
+            first_name = "zedd",
+            last_name = "noname",
+            email = "zedd@lol.cl",
+            username = "zedd",
+            password = "inicio123."
+        )
+        self.profile = Profile.objects.create(user=self.user)
+        self.circle = Circle.objects.create(
+            name = "League of Legends",
+            slug_name = "lol",
+            about = "League of legends circle.",
+            verified = True
+        )
+        self.membership = Membership.objects.create(
+            user=self.user,
+            profile=self.profile,
+            circle=self.circle,
+            remaining_invitations=10
+        )
+
+        # Auth
+        self.token = Token.objects.create(user=self.user).key
+        self.client.credentials(HTTP_AUTHORIZATION='Token {}'.format(self.token))
+
+        # URL
+        self.url = '/circles/{}/members/{}/invitations/'.format(
+            self.circle.slug_name,
+            self.user.username
+        )
+
+    def test_response_success(self):
+        """verify request succeed."""
+        request = self.client.get(self.url)
+        self.assertEqual(request.status_code, status.HTTP_200_OK)
+
+    def test_invitation_creation(self):
+        """Verify invitation are generated if none exists previously."""
+        # Invitations in DB Must be 0
+        self.assertEqual(Invitation.objects.count(), 0)
+
+        # Call member invitations URL
+        request = self.client.get(self.url)
+        self.assertEqual(request.status_code, status.HTTP_200_OK)
+
+        # Verify new invitations were created
+        invitations = Invitation.objects.filter(issued_by=self.user)
+        self.assertEqual(invitations.count(), self.membership.remaining_invitations)
+        self.assertEqual(Invitation.objects.count(), 10)
+
+        for invitation in invitations:
+            self.assertIn(invitation.code, request.data['invitations'])
+        
